@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('https://cdn.midjourney.com/9f92aa19-035f-4a2c-a0c2-3680404af6ce/0_0.png'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    font-family: "Montserrat", sans-serif;
+  }
+
+#clock {
+  font-size: 95px;
+  color: white;
+  font-weight: 300;
+  position: fixed;
+  bottom: 100px;
+  left: 20px;
+}
+
+#date {
+  font-size: 40px;
+  color: white;
+  font-weight: 300;
+  position: fixed;
+  bottom: 65px;
+  left: 20px;
+}
+</style>
+</head>
+<body>
+
+    <div id="clock">Loading...</div>
+    <div id="date">Loading...</div>
+
+<script>
+  // Set the offset in hours, minutes, and seconds
+  let offsetHours = 18;
+  let offsetMinutes = 0;
+  let offsetSeconds = 0;
+
+  function updateClock() {
+    let currentTime = new Date();
+    let utcTime = currentTime.getTime() + currentTime.getTimezoneOffset() * 60000;
+
+    let offsetTime = new Date(utcTime + (offsetHours * 3600000) + (offsetMinutes * 60000) + (offsetSeconds * 1000));
+
+    let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    let weekday = offsetTime.getDay();
+    let month = offsetTime.getMonth();
+    let day = offsetTime.getDate();
+    let hours = offsetTime.getUTCHours();
+    let minutes = offsetTime.getUTCMinutes();
+    let seconds = offsetTime.getUTCSeconds();
+
+    if (hours >= 15) {
+      weekday -= 1;
+      weekday %= 7;
+
+      day -= 1;
+
+      if (day == 0) {
+        month -= 1;
+        month %= 12;
+        day = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+      }
+    }
+
+    let clockElement = document.getElementById('clock');
+    let dateElement = document.getElementById('date');
+
+    clockElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    dateElement.textContent = `${weekdays[weekday]}, ${months[month]} ${day}`;
+
+    setTimeout(updateClock, 1000); // Update every second
+  }
+
+  updateClock(); // Initial call to start the clock
+</script>
+
+</body>
+</html>
